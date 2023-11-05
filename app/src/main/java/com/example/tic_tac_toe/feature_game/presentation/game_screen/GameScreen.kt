@@ -9,9 +9,5 @@ import androidx.navigation.NavController
 
 @Composable
 fun GameScreen(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text("Vez do jogador")
-    }
+
 }

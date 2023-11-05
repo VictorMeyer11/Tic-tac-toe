@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -26,64 +27,80 @@ fun FirstScreen(
     navController: NavController,
     viewModel: FirstScreenViewModel = hiltViewModel()
 ) {
+    val smallSpace = 15.dp
+    val greatSpace = 30.dp
+    val fontSize = 20.sp
+
     val listOfOptions = listOf(
         "3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"
     )
 
-    var textFiledSize = remember {
+    val textFiledSize = remember {
         mutableStateOf(Size.Zero)
     }
 
+    val gameType = viewModel.gameType.value
+    val player1Name = viewModel.player1Name.value
+    val player2Name = viewModel.player2Name.value
     val isMenuExpanded = viewModel.isMenuExpanded.value.isExpanded
     val dropDownMenuLabel = viewModel.menuLabel.value.label
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp),
+            .padding(horizontal = smallSpace),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Spacer(Modifier.height(30.dp))
-        Text("Tipo de jogo", fontSize = 20.sp)
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(greatSpace))
+        Text("Tipo de jogo", fontSize = fontSize)
+        Spacer(Modifier.height(smallSpace))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                colors = if(gameType == "vsBot") ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+                         else ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier.fillMaxWidth(.5f),
-                onClick = {}
+                shape = RectangleShape,
+                onClick = { viewModel.onEvent(FirstScreenEvent.ChangeGameType("vsPlayer")) }
             ) {
-                Text("vs Jogador")
+                Text("vs Jogador", color = Color.DarkGray)
             }
             Button(
+                colors = if(gameType == "vsPlayer") ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+                         else ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                shape = RectangleShape,
+                onClick = { viewModel.onEvent(FirstScreenEvent.ChangeGameType("vsBot")) }
             ) {
-                Text("vs Bot")
+                Text("vs Bot", color = Color.DarkGray)
             }
         }
-        Spacer(Modifier.height(15.dp))
-        Text("Nome dos jogadores", fontSize = 20.sp)
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(smallSpace))
+        Text("Nome dos jogadores", fontSize = fontSize)
+        Spacer(Modifier.height(smallSpace))
         TextField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Jogador 1") },
-            value = "",
-            onValueChange = {  }
+            value = player1Name,
+            onValueChange = {
+                viewModel.onEvent(FirstScreenEvent.Player1Name(it))
+            }
         )
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(smallSpace))
         TextField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Jogador 2") },
-            value = "",
-            onValueChange = {  },
+            value = player2Name,
+            onValueChange = {
+                viewModel.onEvent(FirstScreenEvent.Player2Name(it))
+            },
         )
-        Spacer(Modifier.height(15.dp))
-        Text("Tamanho do tabuleiro")
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(smallSpace))
+        Text("Tamanho do tabuleiro", fontSize = fontSize)
+        Spacer(Modifier.height(smallSpace))
         OutlinedTextField(
             modifier = Modifier.onGloballyPositioned { coordinates ->
                 textFiledSize.value = coordinates.size.toSize()
@@ -124,7 +141,7 @@ fun FirstScreen(
                 ) {
                     Text("Começar partida")
                 }
-                Spacer(Modifier.height(15.dp))
+                Spacer(Modifier.height(smallSpace))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {}

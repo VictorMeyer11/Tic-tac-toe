@@ -17,6 +17,15 @@ class FirstScreenViewModel @Inject constructor(
     private val _menuLabel = mutableStateOf(DropDownMenuState(label = "3x3"))
     val menuLabel: State<DropDownMenuState> = _menuLabel
 
+    private val _gameType = mutableStateOf("vsPlayer")
+    val gameType: State<String> = _gameType
+
+    private val _player1Name = mutableStateOf("")
+    val player1Name: State<String> = _player1Name
+
+    private val _player2Name = mutableStateOf("")
+    val player2Name: State<String> = _player2Name
+
     fun onEvent(event: FirstScreenEvent) {
         when(event) {
             is FirstScreenEvent.ChangeMenuState -> {
@@ -28,6 +37,15 @@ class FirstScreenViewModel @Inject constructor(
                 _menuLabel.value = menuLabel.value.copy(
                     label = event.value
                 )
+            }
+            is FirstScreenEvent.ChangeGameType -> {
+                _gameType.value = event.type
+            }
+            is FirstScreenEvent.Player1Name -> {
+                _player1Name.value = event.name
+            }
+            is FirstScreenEvent.Player2Name -> {
+                _player2Name.value = event.name
             }
         }
     }
