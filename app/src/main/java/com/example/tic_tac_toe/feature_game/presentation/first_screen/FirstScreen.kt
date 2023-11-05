@@ -25,7 +25,7 @@ import com.example.tic_tac_toe.feature_game.presentation.util.Screen
 @Composable
 fun FirstScreen(
     navController: NavController,
-    viewModel: FirstScreenViewModel = hiltViewModel()
+    viewModel: FirstScreenViewModel = FirstScreenViewModel()
 ) {
     val smallSpace = 15.dp
     val greatSpace = 30.dp

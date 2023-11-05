@@ -36,9 +36,9 @@ class MainActivity : ComponentActivity() {
                             FirstScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.GameScreen.route + "/{gameSize}"
+                            route = Screen.GameScreen.route
                         ) {
-                            GameScreen(navController = navController)
+                            GameScreen()
                         }
                     }
                 }
