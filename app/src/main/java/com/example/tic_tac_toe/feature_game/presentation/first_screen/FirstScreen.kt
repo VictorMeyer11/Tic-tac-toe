@@ -25,7 +25,7 @@ import com.example.tic_tac_toe.feature_game.presentation.util.Screen
 @Composable
 fun FirstScreen(
     navController: NavController,
-    viewModel: FirstScreenViewModel = FirstScreenViewModel()
+    viewModel: FirstScreenViewModel = hiltViewModel()
 ) {
     val smallSpace = 15.dp
     val greatSpace = 30.dp
@@ -41,7 +41,8 @@ fun FirstScreen(
 
     val gameType = viewModel.gameType.value
     val player1Name = viewModel.player1Name.value
-    val player2Name = viewModel.player2Name.value
+    val player2Name = if(gameType == "vsBot") "Robô"
+                      else viewModel.player2Name.value
     val isMenuExpanded = viewModel.isMenuExpanded.value.isExpanded
     val dropDownMenuLabel = viewModel.menuLabel.value.label
 
@@ -93,6 +94,7 @@ fun FirstScreen(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Jogador 2") },
+            readOnly = gameType == "vsBot",
             value = player2Name,
             onValueChange = {
                 viewModel.onEvent(FirstScreenEvent.Player2Name(it))
@@ -137,7 +139,11 @@ fun FirstScreen(
             Column {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { navController.navigate(Screen.GameScreen.route) }
+                    onClick = {
+                        //if(player1Name == "")
+
+                        navController.navigate("game_screen/$player1Name/$player2Name/$dropDownMenuLabel")
+                    }
                 ) {
                     Text("Começar partida")
                 }

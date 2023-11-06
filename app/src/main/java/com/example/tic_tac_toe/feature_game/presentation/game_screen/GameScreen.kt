@@ -10,42 +10,47 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tic_tac_toe.feature_game.presentation.first_screen.FirstScreenEvent
 
 @Composable
 fun GameScreen(
-    modifier: Modifier = Modifier,
-    viewModel: GameViewModel = GameViewModel(),
-    numberOfRows: Int = 5,
+    player1Name: String?,
+    player2Name: String?,
+    boardFormat: String?,
+    gameType: String? = "vsBot",
+    viewModel: GameViewModel = GameViewModel()
 ){
     val state = viewModel.state.value
-
+    val numberOfRows = boardFormat?.first()?.toString()?.toInt()!!
     if(viewModel.state.value.buttonWinners.isEmpty()) viewModel.setBoardSize(numberOfRows*numberOfRows)
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val turn = if(state.isPlayer1sTurn) "X's Turn" else "O's Turn"
+        val turn = if(state.isPlayer1sTurn) "$player1Name's Turn" else "$player2Name's Turn"
         val turnMessage = "Tic Tac Toe\nIt is $turn"
-        val winner = state.victor
+        val winner = if(state.victor == "X") player1Name
+                     else if(state.victor == "O") player2Name
+                     else null
         val winnerMessage = "Tic Tac Toe\n$winner Wins"
 
         Text(
             text = if(winner != null) winnerMessage else turnMessage,
             textAlign = TextAlign.Center,
-            modifier = modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             fontSize = 40.sp
         )
         Column {
             for(rowId in 1..numberOfRows) {
-                BuildRow(rowId = rowId, viewModel = viewModel, numberOfColumns = numberOfRows)
+                BuildRow(rowId = rowId, viewModel = viewModel, numberOfColumns = numberOfRows, gameType = gameType)
                 Spacer(modifier = Modifier.height(10.dp))
             }
         }
 
         Button(onClick = { viewModel.resetBoard() }){
-            Text(text = "Reset Game", fontSize = 32.sp)
+            Text(text = "Resetar jogo", fontSize = 20.sp)
         }
     }
 }
@@ -55,7 +60,8 @@ fun BuildRow(
     rowId: Int,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel,
-    numberOfColumns: Int
+    numberOfColumns: Int,
+    gameType: String?,
 ){
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -69,7 +75,8 @@ fun BuildRow(
 
         for(columnId in first until last) {
             TicTacToeButton(buttonValues[columnId], buttonColors[columnId]) {
-                viewModel.setButton(columnId)
+                if(gameType == "vsBot") viewModel.botTurn(columnId)
+                else viewModel.setButton(columnId)
             }
         }
 //        val third = (rowId * 3) - 1

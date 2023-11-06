@@ -7,7 +7,8 @@ import com.example.tic_tac_toe.feature_game.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-class FirstScreenViewModel: ViewModel() {
+@HiltViewModel
+class FirstScreenViewModel @Inject constructor(): ViewModel() {
     private val _isMenuExpanded = mutableStateOf(DropDownMenuState(isExpanded = false))
     val isMenuExpanded: State<DropDownMenuState> = _isMenuExpanded
 

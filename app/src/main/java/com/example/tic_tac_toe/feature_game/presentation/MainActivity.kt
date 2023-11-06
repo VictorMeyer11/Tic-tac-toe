@@ -10,9 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tic_tac_toe.feature_game.presentation.first_screen.FirstScreen
 import com.example.tic_tac_toe.feature_game.presentation.game_screen.GameScreen
 import com.example.tic_tac_toe.feature_game.presentation.util.Screen
@@ -36,9 +38,26 @@ class MainActivity : ComponentActivity() {
                             FirstScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.GameScreen.route
+                            route = Screen.GameScreen.route,
+                            arguments = listOf(
+                                navArgument("player1_name") {
+                                    type = NavType.StringType
+                                },
+                                navArgument("player2_name") {
+                                    type = NavType.StringType
+                                },
+                                navArgument("board_format") {
+                                    type = NavType.StringType
+                                }
+                            )
                         ) {
-                            GameScreen()
+                            it.arguments?.let { bundle ->
+                                GameScreen(
+                                    bundle.getString("player1_name"),
+                                    bundle.getString("player2_name"),
+                                    bundle.getString("board_format")
+                                )
+                            }
                         }
                     }
                 }
