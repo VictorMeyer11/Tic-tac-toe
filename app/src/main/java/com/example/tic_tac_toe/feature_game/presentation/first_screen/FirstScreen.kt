@@ -31,9 +31,9 @@ fun FirstScreen(
     navController: NavController,
     viewModel: FirstScreenViewModel = hiltViewModel()
 ) {
-    val smallSpace = 15.dp
-    val greatSpace = 30.dp
-    val fontSize = 20.sp
+    val smallSpace = 16.dp
+    val greatSpace = 32.dp
+    val fontSize = 24.sp
 
     val listOfOptions = listOf(
         "3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"
@@ -88,20 +88,6 @@ fun FirstScreen(
         Spacer(Modifier.height(smallSpace))
         Text("Nome dos jogadores", fontSize = fontSize)
         Spacer(Modifier.height(smallSpace))
-//        TextField(
-//            modifier = Modifier.fillMaxWidth(),
-//            placeholder = { Text("Jogador 1") },
-//            value = player1Name,
-//            isError = isError1,
-//            keyboardOptions = KeyboardOptions(
-//                keyboardType = KeyboardType.Text,
-//                autoCorrect = false
-//            ),
-//            onValueChange = {
-//                viewModel.onEvent(FirstScreenEvent.Player1Name(it.filter { char -> char != ' ' }))
-//            }
-//        )
-//        ErrorText(isError1)
         CustomTextField(player1Name,1, isError1, viewModel)
         Spacer(Modifier.height(smallSpace))
         CustomTextField(player2Name,2, isError2, viewModel)

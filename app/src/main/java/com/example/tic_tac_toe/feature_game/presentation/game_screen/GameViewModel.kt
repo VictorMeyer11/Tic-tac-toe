@@ -30,16 +30,16 @@ class GameViewModel @Inject constructor(
 
                 when(gameType) {
                     "vsBot" -> {
-                        val botSquareId = botTurn(id, buttons)
-
                         buttons[id] = "X"
                         _state.value = _state.value.copy(buttonValues = buttons)
 
-                        if(!isGameOver(id, player1, player2))
-                            buttons[botSquareId] = "O"
+                        if(!isGameOver(id, player1, player2)) {
+                            val botSquareId = botTurn(id, buttons)
 
-                        _state.value = _state.value.copy(buttonValues = buttons)
-                        isGameOver(id, player1, player2)
+                            buttons[botSquareId] = "O"
+                            _state.value = _state.value.copy(buttonValues = buttons)
+                            isGameOver(botSquareId, player1, player2)
+                        }
                     }
                     "vsPlayer" -> {
                         if (_state.value.isPlayer1sTurn) {
@@ -139,7 +139,6 @@ class GameViewModel @Inject constructor(
                 return false
             }
         }
-
         return true
     }
 
@@ -159,7 +158,7 @@ class GameViewModel @Inject constructor(
     private fun checkHorizontally(id: Int): Boolean {
         val rowSize = sqrt(_state.value.buttonValues.size.toDouble()).toInt()
         val currentRow = getCurrentRow(id)
-        val last = (rowSize-1)*currentRow
+        val last = rowSize*currentRow - 1
         val first = last - rowSize + 1
 
         for(currentId in id until last) {
@@ -173,7 +172,6 @@ class GameViewModel @Inject constructor(
                 return false
             }
         }
-
         return true
     }
 

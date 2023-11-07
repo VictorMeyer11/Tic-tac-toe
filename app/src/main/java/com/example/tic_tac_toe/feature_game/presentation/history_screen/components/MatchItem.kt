@@ -2,12 +2,14 @@ package com.example.tic_tac_toe.feature_game.presentation.history_screen.compone
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun MatchItem(
@@ -18,12 +20,12 @@ fun MatchItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
-            .border(2.dp, Color.Gray),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .height(80.dp)
+            .border(2.dp, MaterialTheme.colors.primary),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text("$player1 vs $player2")
-        Spacer(Modifier.height(15.dp))
-        Text("Vencedor: $winner")
+        Text("$player1 vs $player2", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Text("Vencedor: $winner", fontWeight = FontWeight.Bold, fontSize = 20.sp)
     }
 }
