@@ -6,6 +6,7 @@ import com.example.tic_tac_toe.feature_game.data.data_source.AppDataBase
 import com.example.tic_tac_toe.feature_game.data.repository.AppRepositoryImplementation
 import com.example.tic_tac_toe.feature_game.domain.repository.AppRepository
 import com.example.tic_tac_toe.feature_game.domain.use_case.GetMatchHistory
+import com.example.tic_tac_toe.feature_game.domain.use_case.SaveMatch
 import com.example.tic_tac_toe.feature_game.domain.use_case.UseCases
 import dagger.Module
 import dagger.Provides
@@ -37,7 +38,8 @@ object AppModule {
     @Singleton
     fun provideUseCases(repository: AppRepository): UseCases {
         return UseCases(
-            getMatchHistory = GetMatchHistory(repository)
+            getMatchHistory = GetMatchHistory(repository),
+            saveMatch = SaveMatch(repository)
         )
     }
 }

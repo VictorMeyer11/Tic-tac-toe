@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.tic_tac_toe.feature_game.presentation.first_screen.FirstScreen
 import com.example.tic_tac_toe.feature_game.presentation.game_screen.GameScreen
+import com.example.tic_tac_toe.feature_game.presentation.history_screen.HistoryScreen
 import com.example.tic_tac_toe.feature_game.presentation.util.Screen
 import com.example.tic_tac_toe.ui.theme.TictactoeTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,6 +59,9 @@ class MainActivity : ComponentActivity() {
                                     bundle.getString("board_format")
                                 )
                             }
+                        }
+                        composable(route = Screen.HistoryScreen.route) {
+                            HistoryScreen()
                         }
                     }
                 }

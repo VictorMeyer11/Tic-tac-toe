@@ -150,7 +150,7 @@ fun FirstScreen(
                 Spacer(Modifier.height(smallSpace))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {}
+                    onClick = { navController.navigate(Screen.HistoryScreen.route) }
                 ) {
                     Text("Histórico de partidas")
                 }

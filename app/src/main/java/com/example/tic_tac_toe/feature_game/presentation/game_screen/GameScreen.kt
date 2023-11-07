@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tic_tac_toe.feature_game.presentation.first_screen.FirstScreenEvent
 
 @Composable
@@ -18,7 +19,7 @@ fun GameScreen(
     player2Name: String?,
     boardFormat: String?,
     gameType: String? = "vsBot",
-    viewModel: GameViewModel = GameViewModel()
+    viewModel: GameViewModel = hiltViewModel()
 ){
     val state = viewModel.state.value
     val numberOfRows = boardFormat?.first()?.toString()?.toInt()!!
@@ -30,7 +31,8 @@ fun GameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val turn = if(state.isPlayer1sTurn) "$player1Name's Turn" else "$player2Name's Turn"
-        val turnMessage = "Tic Tac Toe\nIt is $turn"
+        val turnMessage = if(gameType == "vsPlayer") "Tic Tac Toe\nIt is $turn"
+                          else ""
         val winner = if(state.victor == "X") player1Name
                      else if(state.victor == "O") player2Name
                      else null
@@ -44,7 +46,14 @@ fun GameScreen(
         )
         Column {
             for(rowId in 1..numberOfRows) {
-                BuildRow(rowId = rowId, viewModel = viewModel, numberOfColumns = numberOfRows, gameType = gameType)
+                BuildRow(
+                    rowId = rowId,
+                    viewModel = viewModel,
+                    numberOfColumns = numberOfRows,
+                    gameType = gameType,
+                    player1Name = player1Name,
+                    player2Name = player2Name
+                )
                 Spacer(modifier = Modifier.height(10.dp))
             }
         }
@@ -62,6 +71,8 @@ fun BuildRow(
     viewModel: GameViewModel,
     numberOfColumns: Int,
     gameType: String?,
+    player1Name: String?,
+    player2Name: String?,
 ){
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -75,18 +86,9 @@ fun BuildRow(
 
         for(columnId in first until last) {
             TicTacToeButton(buttonValues[columnId], buttonColors[columnId]) {
-                if(gameType == "vsBot") viewModel.botTurn(columnId)
-                else viewModel.setButton(columnId)
+                viewModel.setButton(columnId, gameType, player1Name, player2Name)
             }
         }
-//        val third = (rowId * 3) - 1
-//        val second = third - 1
-//        val first = second - 1
-//
-//
-//
-//        TicTacToeButton(buttonValues[second], buttonColors[second]) { viewModel.setButton(second)}
-//        TicTacToeButton(buttonValues[third], buttonColors[third]) { viewModel.setButton(third)}
     }
 }
 

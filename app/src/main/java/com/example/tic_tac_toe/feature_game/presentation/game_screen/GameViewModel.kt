@@ -3,9 +3,18 @@ package com.example.tic_tac_toe.feature_game.presentation.game_screen
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tic_tac_toe.feature_game.domain.use_case.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.sqrt
+import com.example.tic_tac_toe.feature_game.domain.model.MatchResult
 
-class GameViewModel: ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    private val useCases: UseCases
+): ViewModel() {
     private val _state = mutableStateOf(GameState())
     val state: State<GameState> = _state
 
@@ -14,47 +23,51 @@ class GameViewModel: ViewModel() {
         _state.value.buttonWinners  = Array(size){false}
     }
 
-    fun setButton(id: Int) {
+    fun setButton(id: Int, gameType: String?, player1: String?, player2: String?) {
         if(_state.value.victor == null) {
             if (_state.value.buttonValues[id] == "-") {
                 val buttons = _state.value.buttonValues.copyOf()
 
-                if (_state.value.isPlayer1sTurn) {
-                    buttons[id] = "X"
-                } else {
-                    buttons[id] = "O"
+                when(gameType) {
+                    "vsBot" -> {
+                        buttons[id] = "X"
+                        buttons[0] = "O"
+                        _state.value = _state.value.copy(buttonValues = buttons)
+                    }
+                    "vsPlayer" -> {
+                        if (_state.value.isPlayer1sTurn) {
+                            buttons[id] = "X"
+                        } else {
+                            buttons[id] = "O"
+                        }
+                        _state.value = _state.value.copy(
+                            buttonValues = buttons,
+                            isPlayer1sTurn = !_state.value.isPlayer1sTurn
+                        )
+                    }
                 }
-                _state.value = _state.value.copy(
-                    buttonValues = buttons,
-                    isPlayer1sTurn = !_state.value.isPlayer1sTurn
-                )
             }
         }
-        isGameOver(id)
+        isGameOver(id, player1, player2)
     }
 
-    fun botTurn(id: Int) {
-        if(_state.value.victor == null) {
-            if (_state.value.buttonValues[id] == "-") {
-                val buttons = _state.value.buttonValues.copyOf()
-
-                if (_state.value.isPlayer1sTurn) {
-                    buttons[id] = "X"
-                } else {
-
-                }
-                _state.value = _state.value.copy(
-                    buttonValues = buttons,
-                    isPlayer1sTurn = !_state.value.isPlayer1sTurn
+    private fun saveMatch(player1: String?, player2: String?) {
+        viewModelScope.launch {
+            useCases.saveMatch(
+                MatchResult(
+                    player1 = player1,
+                    player2 = player2,
+                    winner = if(_state.value.victor == "X") player1!!
+                             else player2!!
                 )
-            }
+            )
         }
-        isGameOver(id)
     }
 
-    private fun isGameOver(id: Int): Boolean {
+    private fun isGameOver(id: Int, player1: String?, player2: String?): Boolean {
         if(checkForAWinner(id)) {
             _state.value = _state.value.copy(victor = _state.value.buttonValues[id])
+            saveMatch(player1, player2)
             return true
         }
         return false
