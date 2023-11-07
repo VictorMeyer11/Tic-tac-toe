@@ -32,7 +32,7 @@ fun GameScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -68,7 +68,7 @@ fun GameScreen(
             onClick = viewModel::resetBoard,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(text = "Resetar jogo", fontSize = 24.sp)
+            Text(text = "Resetar jogo")
         }
     }
 }

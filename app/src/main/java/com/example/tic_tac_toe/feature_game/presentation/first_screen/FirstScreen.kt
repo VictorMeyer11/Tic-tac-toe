@@ -47,6 +47,7 @@ fun FirstScreen(
     val player1Name = viewModel.textFieldsState.value.player1Name
     val player2Name = if(gameType == "vsBot") "Robô"
                       else viewModel.textFieldsState.value.player2Name
+
     val isMenuExpanded = viewModel.isMenuExpanded.value.isExpanded
     val dropDownMenuLabel = viewModel.menuLabel.value.label
     val isError1 = viewModel.textFieldsState.value.isError1
@@ -90,7 +91,7 @@ fun FirstScreen(
         Spacer(Modifier.height(smallSpace))
         CustomTextField(player1Name,1, isError1, viewModel)
         Spacer(Modifier.height(smallSpace))
-        CustomTextField(player2Name,2, isError2, viewModel)
+        CustomTextField(player2Name,2, isError2, viewModel, gameType=="vsBot")
         Spacer(Modifier.height(smallSpace))
         Text("Tamanho do tabuleiro", fontSize = fontSize)
         Spacer(Modifier.height(smallSpace))
@@ -132,6 +133,8 @@ fun FirstScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         if(player1Name != "" && player2Name != "") {
+                            viewModel.onEvent(FirstScreenEvent.ErrorSecondTextField(false))
+                            viewModel.onEvent(FirstScreenEvent.ErrorFirstTextField(false))
                             navController.navigate("game_screen/$player1Name/$player2Name/$dropDownMenuLabel/$gameType")
                         } else {
                             if(player1Name == "") {
@@ -154,6 +157,7 @@ fun FirstScreen(
                 ) {
                     Text("Histórico de partidas")
                 }
+                Spacer(Modifier.height(smallSpace))
             }
         }
     }

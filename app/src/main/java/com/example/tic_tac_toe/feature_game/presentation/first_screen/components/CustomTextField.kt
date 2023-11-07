@@ -15,12 +15,14 @@ fun CustomTextField(
     playerName: String,
     playerNumber: Int,
     isError: Boolean,
-    viewModel: FirstScreenViewModel
+    viewModel: FirstScreenViewModel,
+    readOnly: Boolean = false
 ) {
     TextField(
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text("Jogador $playerNumber") },
         value = playerName,
+        readOnly = readOnly,
         isError = isError,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
