@@ -6,19 +6,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.tic_tac_toe.feature_game.presentation.first_screen.FirstScreenEvent
+import com.example.tic_tac_toe.feature_game.presentation.game_screen.components.BuildRow
 
 @Composable
 fun GameScreen(
     player1Name: String?,
     player2Name: String?,
     boardFormat: String?,
-    gameType: String? = "vsBot",
+    gameType: String?,
     viewModel: GameViewModel = hiltViewModel()
 ){
     val state = viewModel.state.value
@@ -31,8 +30,7 @@ fun GameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val turn = if(state.isPlayer1sTurn) "$player1Name's Turn" else "$player2Name's Turn"
-        val turnMessage = if(gameType == "vsPlayer") "Tic Tac Toe\nIt is $turn"
-                          else ""
+        val turnMessage = "Tic Tac Toe\nIt is $turn"
         val winner = if(state.victor == "X") player1Name
                      else if(state.victor == "O") player2Name
                      else null
@@ -61,50 +59,5 @@ fun GameScreen(
         Button(onClick = { viewModel.resetBoard() }){
             Text(text = "Resetar jogo", fontSize = 20.sp)
         }
-    }
-}
-
-@Composable
-fun BuildRow(
-    rowId: Int,
-    modifier: Modifier = Modifier,
-    viewModel: GameViewModel,
-    numberOfColumns: Int,
-    gameType: String?,
-    player1Name: String?,
-    player2Name: String?,
-){
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        val first = rowId*numberOfColumns - numberOfColumns
-        val last = rowId*numberOfColumns
-        val buttonColors = viewModel.state.value.buttonWinners
-        val buttonValues = viewModel.state.value.buttonValues
-
-        for(columnId in first until last) {
-            TicTacToeButton(buttonValues[columnId], buttonColors[columnId]) {
-                viewModel.setButton(columnId, gameType, player1Name, player2Name)
-            }
-        }
-    }
-}
-
-@Composable
-fun TicTacToeButton(
-    button: String,
-    shouldChangeColor: Boolean,
-    onClick: () -> Unit,
-) {
-    val color = if(shouldChangeColor) Color.LightGray
-    else Color.White
-
-    Button(
-        onClick = onClick,
-        modifier = Modifier.defaultMinSize(10.dp)
-    ) {
-        Text(text = button, fontSize = 10.sp)
     }
 }

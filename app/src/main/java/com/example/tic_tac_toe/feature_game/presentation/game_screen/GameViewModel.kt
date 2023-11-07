@@ -30,9 +30,16 @@ class GameViewModel @Inject constructor(
 
                 when(gameType) {
                     "vsBot" -> {
+                        val botSquareId = botTurn(id, buttons)
+
                         buttons[id] = "X"
-                        buttons[0] = "O"
                         _state.value = _state.value.copy(buttonValues = buttons)
+
+                        if(!isGameOver(id, player1, player2))
+                            buttons[botSquareId] = "O"
+
+                        _state.value = _state.value.copy(buttonValues = buttons)
+                        isGameOver(id, player1, player2)
                     }
                     "vsPlayer" -> {
                         if (_state.value.isPlayer1sTurn) {
@@ -44,11 +51,34 @@ class GameViewModel @Inject constructor(
                             buttonValues = buttons,
                             isPlayer1sTurn = !_state.value.isPlayer1sTurn
                         )
+                        isGameOver(id, player1, player2)
                     }
                 }
             }
         }
-        isGameOver(id, player1, player2)
+    }
+
+    private fun botTurn(id: Int, buttons: Array<String>): Int {
+        val lineSize = sqrt(buttons.size.toDouble()).toInt()
+
+        var currentId: Int = if((id % lineSize == 0 || id % lineSize == lineSize - 1) && id + lineSize < buttons.size) {
+            id + lineSize
+        } else if(id % lineSize == 0 || id % lineSize == lineSize - 1) {
+            id - lineSize
+        } else if(id + 1 < buttons.size) {
+            id + 1
+        } else {
+            id - 1
+        }
+
+        if(buttons[currentId] != "-") {
+            for(i in buttons.indices) {
+                if(buttons[i] == "-") {
+                    currentId = i
+                }
+            }
+        }
+        return currentId
     }
 
     private fun saveMatch(player1: String?, player2: String?) {
@@ -149,22 +179,6 @@ class GameViewModel @Inject constructor(
 
     private fun checkForAWinner(id: Int): Boolean {
         return checkDiagonally() || checkHorizontally(id) || checkVertically(id)
-//        val firstTwoMatch = _state.value.buttonValues[first] == _state.value.buttonValues[second]
-//        val secondTwoMatch = _state.value.buttonValues[second] == _state.value.buttonValues[third]
-//        val allThreeMatch = firstTwoMatch && secondTwoMatch
-//        return if(_state.value.buttonValues[first] == "-") {
-//            false
-//        } else if(allThreeMatch){
-//            _state.value = _state.value.copy(victor = _state.value.buttonValues[first])
-//            val buttonWinners = _state.value.buttonWinners.copyOf()
-//            buttonWinners[first] = true
-//            buttonWinners[second] = true
-//            buttonWinners[third] = true
-//            _state.value = _state.value.copy(buttonWinners = buttonWinners)
-//            true
-//        } else {
-//            false
-//        }
     }
 
     fun resetBoard(){

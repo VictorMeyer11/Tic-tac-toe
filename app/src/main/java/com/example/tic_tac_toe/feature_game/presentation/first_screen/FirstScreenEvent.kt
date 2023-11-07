@@ -6,4 +6,6 @@ sealed class FirstScreenEvent {
     data class ChangeGameType(val type: String): FirstScreenEvent()
     data class Player1Name(val name: String): FirstScreenEvent()
     data class Player2Name(val name: String): FirstScreenEvent()
+    data class ErrorFirstTextField(val state: Boolean): FirstScreenEvent()
+    data class ErrorSecondTextField(val state: Boolean): FirstScreenEvent()
 }

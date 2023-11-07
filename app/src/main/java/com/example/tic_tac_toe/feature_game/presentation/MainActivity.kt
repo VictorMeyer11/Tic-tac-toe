@@ -56,7 +56,8 @@ class MainActivity : ComponentActivity() {
                                 GameScreen(
                                     bundle.getString("player1_name"),
                                     bundle.getString("player2_name"),
-                                    bundle.getString("board_format")
+                                    bundle.getString("board_format"),
+                                    bundle.getString("game_type")
                                 )
                             }
                         }

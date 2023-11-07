@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.tic_tac_toe.feature_game.presentation.history_screen.composable.MatchItem
+import com.example.tic_tac_toe.feature_game.presentation.history_screen.components.MatchItem
 
 @Composable
 fun HistoryScreen(

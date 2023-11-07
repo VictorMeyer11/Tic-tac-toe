@@ -2,6 +2,7 @@ package com.example.tic_tac_toe.feature_game.presentation.first_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -15,11 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.tic_tac_toe.feature_game.presentation.first_screen.components.CustomTextField
+import com.example.tic_tac_toe.feature_game.presentation.first_screen.components.ErrorText
 import com.example.tic_tac_toe.feature_game.presentation.util.Screen
 
 @Composable
@@ -40,11 +44,13 @@ fun FirstScreen(
     }
 
     val gameType = viewModel.gameType.value
-    val player1Name = viewModel.player1Name.value
+    val player1Name = viewModel.textFieldsState.value.player1Name
     val player2Name = if(gameType == "vsBot") "Robô"
-                      else viewModel.player2Name.value
+                      else viewModel.textFieldsState.value.player2Name
     val isMenuExpanded = viewModel.isMenuExpanded.value.isExpanded
     val dropDownMenuLabel = viewModel.menuLabel.value.label
+    val isError1 = viewModel.textFieldsState.value.isError1
+    val isError2 = viewModel.textFieldsState.value.isError2
 
     Column(
         modifier = Modifier
@@ -82,24 +88,23 @@ fun FirstScreen(
         Spacer(Modifier.height(smallSpace))
         Text("Nome dos jogadores", fontSize = fontSize)
         Spacer(Modifier.height(smallSpace))
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Jogador 1") },
-            value = player1Name,
-            onValueChange = {
-                viewModel.onEvent(FirstScreenEvent.Player1Name(it))
-            }
-        )
+//        TextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            placeholder = { Text("Jogador 1") },
+//            value = player1Name,
+//            isError = isError1,
+//            keyboardOptions = KeyboardOptions(
+//                keyboardType = KeyboardType.Text,
+//                autoCorrect = false
+//            ),
+//            onValueChange = {
+//                viewModel.onEvent(FirstScreenEvent.Player1Name(it.filter { char -> char != ' ' }))
+//            }
+//        )
+//        ErrorText(isError1)
+        CustomTextField(player1Name,1, isError1, viewModel)
         Spacer(Modifier.height(smallSpace))
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Jogador 2") },
-            readOnly = gameType == "vsBot",
-            value = player2Name,
-            onValueChange = {
-                viewModel.onEvent(FirstScreenEvent.Player2Name(it))
-            },
-        )
+        CustomTextField(player2Name,2, isError2, viewModel)
         Spacer(Modifier.height(smallSpace))
         Text("Tamanho do tabuleiro", fontSize = fontSize)
         Spacer(Modifier.height(smallSpace))
@@ -140,9 +145,18 @@ fun FirstScreen(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        //if(player1Name == "")
-
-                        navController.navigate("game_screen/$player1Name/$player2Name/$dropDownMenuLabel")
+                        if(player1Name != "" && player2Name != "") {
+                            navController.navigate("game_screen/$player1Name/$player2Name/$dropDownMenuLabel/$gameType")
+                        } else {
+                            if(player1Name == "") {
+                                if(player2Name != "") viewModel.onEvent(FirstScreenEvent.ErrorSecondTextField(false))
+                                viewModel.onEvent(FirstScreenEvent.ErrorFirstTextField(true))
+                            }
+                            if(player2Name == "") {
+                                if(player1Name != "") viewModel.onEvent(FirstScreenEvent.ErrorFirstTextField(false))
+                                viewModel.onEvent(FirstScreenEvent.ErrorSecondTextField(true))
+                            }
+                        }
                     }
                 ) {
                     Text("Começar partida")
