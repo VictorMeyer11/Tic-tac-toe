@@ -54,7 +54,7 @@ fun GameScreen(
         LazyVerticalGrid(cells = GridCells.Fixed(numberOfRows)) {
             itemsIndexed(viewModel.state.value.buttonValues) { index, value ->
                 Box(
-                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 2.dp),
+                    modifier = Modifier.padding(vertical = 2.dp, horizontal = 1.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     TicTacToeButton(value) {

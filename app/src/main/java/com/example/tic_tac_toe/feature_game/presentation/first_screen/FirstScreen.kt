@@ -47,7 +47,6 @@ fun FirstScreen(
     val player1Name = viewModel.textFieldsState.value.player1Name
     val player2Name = if(gameType == "vsBot") "Robô"
                       else viewModel.textFieldsState.value.player2Name
-
     val isMenuExpanded = viewModel.isMenuExpanded.value.isExpanded
     val dropDownMenuLabel = viewModel.menuLabel.value.label
     val isError1 = viewModel.textFieldsState.value.isError1
